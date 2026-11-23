@@ -154,6 +154,8 @@ nav.main li:hover .caret{transform:rotate(180deg)}
 .h-img img{width:100%;height:100%;object-fit:cover;transition:transform 1.1s var(--ease)}
 .h-img::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(1,31,37,.88));transition:opacity .4s}
 .house:hover .h-img img{transform:scale(1.08)}
+.reveal .h-img img{clip-path:inset(0 100% 0 0);transition:clip-path 1.2s var(--ease),transform 1.1s var(--ease)}
+.reveal.in .h-img img{clip-path:inset(0 0 0 0)}
 .h-cap{position:absolute;left:0;right:0;bottom:0;padding:24px 24px 26px;color:#fff;z-index:2}
 .h-cap h3{font-size:clamp(22px,2vw,28px);letter-spacing:-.02em}
 .h-cap span{display:inline-flex;align-items:center;gap:8px;margin-top:10px;font-size:14px;font-weight:600;padding:7px 14px;border-radius:999px;background:rgba(255,255,255,.16);backdrop-filter:blur(6px);transition:background .3s,color .3s}
@@ -350,7 +352,7 @@ footer a:hover{color:var(--glove)}
   *,*::before,*::after{animation:none!important;transition:none!important}
   .cleans span{background-position:0 0!important}
   .roof path,.trail path{stroke-dashoffset:0!important}
-  .wipe{clip-path:none}.rise{opacity:1;transform:none}
+  .wipe{clip-path:none}.rise{opacity:1;transform:none}.reveal .h-img img{clip-path:none}
 }
 </style>
 </head>
@@ -475,23 +477,23 @@ footer a:hover{color:var(--glove)}
       <p class="rise">Whatever the space, our trained team brings the same attention to detail to homes and businesses across Edmonton.</p>
     </div>
     <div class="houses">
-      <a class="house" href="https://www.unitedmaidsalberta.ca/services/commercial-cleaning">
-        <div class="h-img"><img class="wipe" src="images/office-premises.jpg" alt="A cleaner mopping an office floor in the evening" loading="lazy"></div>
+      <a class="house reveal" href="https://www.unitedmaidsalberta.ca/services/commercial-cleaning">
+        <div class="h-img"><img src="images/office-premises.jpg" alt="A cleaner mopping an office floor in the evening"></div>
         <svg class="h-door"><use href="#spk"/></svg>
         <div class="h-cap"><h3>Office Premises</h3><span>Commercial Cleaning</span></div>
       </a>
-      <a class="house" href="https://www.unitedmaidsalberta.ca/services/commercial-cleaning">
-        <div class="h-img"><img class="wipe" src="images/bar-restaurant.jpg" alt="A cleaner wiping down a restaurant bar after closing" loading="lazy"></div>
+      <a class="house reveal" href="https://www.unitedmaidsalberta.ca/services/commercial-cleaning">
+        <div class="h-img"><img src="images/bar-restaurant.jpg" alt="A cleaner wiping down a restaurant bar after closing"></div>
         <svg class="h-door"><use href="#spk"/></svg>
         <div class="h-cap"><h3>Bar &amp; Restaurant</h3><span>Commercial Cleaning</span></div>
       </a>
-      <a class="house" href="https://www.unitedmaidsalberta.ca/residential-cleaning-service-near-me">
-        <div class="h-img"><img class="wipe" src="images/bathroom-cleaning.jpg" alt="Gloved hands scrubbing a bathroom sink" loading="lazy"></div>
+      <a class="house reveal" href="https://www.unitedmaidsalberta.ca/residential-cleaning-service-near-me">
+        <div class="h-img"><img src="images/bathroom-cleaning.jpg" alt="Gloved hands scrubbing a bathroom sink"></div>
         <svg class="h-door"><use href="#spk"/></svg>
         <div class="h-cap"><h3>Bathroom Cleaning</h3><span>Residential Cleaning</span></div>
       </a>
-      <a class="house" href="https://www.unitedmaidsalberta.ca/carpet-cleaning-janitorial-services-edmonton">
-        <div class="h-img"><img class="wipe" src="images/carpet-cleaning.jpg" alt="A carpet cleaning wand leaving a clean stripe on a living room carpet" loading="lazy"></div>
+      <a class="house reveal" href="https://www.unitedmaidsalberta.ca/carpet-cleaning-janitorial-services-edmonton">
+        <div class="h-img"><img src="images/carpet-cleaning.jpg" alt="A carpet cleaning wand leaving a clean stripe on a living room carpet"></div>
         <svg class="h-door"><use href="#spk"/></svg>
         <div class="h-cap"><h3>Carpet Cleaning</h3><span>Residential &amp; Commercial</span></div>
       </a>
@@ -519,8 +521,8 @@ footer a:hover{color:var(--glove)}
 <section class="sec story" id="our-story">
   <div class="wrap">
     <div class="collage">
-      <figure class="c1 wipe"><img src="images/glass-table.jpg" alt="A United Maids cleaner wiping a glass dining table" loading="lazy"></figure>
-      <figure class="c2 wipe"><img src="images/carpet-vacuum.jpg" alt="Vacuuming a cream carpet" loading="lazy"></figure>
+      <figure class="c1 wipe"><img src="images/glass-table.jpg" alt="A United Maids cleaner wiping a glass dining table"></figure>
+      <figure class="c2 wipe"><img src="images/carpet-vacuum.jpg" alt="Vacuuming a cream carpet"></figure>
       <div class="badge"><div><b>12+</b><small>years of<br>experience</small></div></div>
     </div>
     <div class="story-text">
@@ -695,7 +697,8 @@ const track=document.getElementById('track');track.innerHTML+=track.innerHTML;
 [...track.children].slice(track.children.length/2).forEach(a=>{a.setAttribute('aria-hidden','true');a.tabIndex=-1});
 // reveals
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.15,rootMargin:'0px 0px -40px 0px'});
-document.querySelectorAll('.wipe,.rise').forEach((el,i)=>{el.style.transitionDelay=(el.closest('.house')?[...el.closest('.houses').children].indexOf(el.closest('.house'))*.12:0)+'s';io.observe(el)});
+document.querySelectorAll('.wipe,.rise,.reveal').forEach(el=>{if(el.classList.contains('reveal'))el.querySelector('img').style.transitionDelay=[...el.parentElement.children].indexOf(el)*.12+'s';io.observe(el)});
+addEventListener('load',()=>setTimeout(()=>document.querySelectorAll('.wipe,.rise,.reveal').forEach(el=>{const r=el.getBoundingClientRect();if(r.top<innerHeight&&r.bottom>0)el.classList.add('in')}),300));
 const how=document.getElementById('how');
 new IntersectionObserver((e,o)=>{if(e[0].isIntersecting){how.classList.add('on');o.disconnect()}},{threshold:.3}).observe(how);
 // parallax
